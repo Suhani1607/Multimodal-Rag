@@ -1,11 +1,15 @@
-# Minimal Runtime image using Eclipse Temurin Java 21
-FROM eclipse-temurin:21-jre-alpine
+FROM maven:3.9-eclipse-temurin-17 AS build
+
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Copy the pre-built Spring Boot executable JAR directly
-# This eliminates Docker build DNS timeouts and downloads (mvn dependency:go-offline)
-COPY target/platform-1.0.0.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
-
+CMD ["java", "-jar", "app.jar"]
