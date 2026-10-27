@@ -1,0 +1,43 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: knowledge-platform-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/knowledge_platform}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+clerk:
+  secret-key: ${CLERK_SECRET_KEY:}
+  jwks-url: ${CLERK_JWKS_URL:}
+
+ai-service:
+  url: ${FASTAPI_URL:http://localhost:8001}
+  secret: ${INTERNAL_API_SECRET:super-secret-internal-token-change-in-prod}
+
+storage:
+  type: ${STORAGE_TYPE:local}
+  location: ${LOCAL_STORAGE_PATH:./storage/uploads}
+  s3:
+    bucket-name: ${S3_BUCKET_NAME:}
+    region: ${AWS_REGION:us-east-1}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
